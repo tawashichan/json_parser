@@ -1,5 +1,12 @@
 module Ast = struct
-  type jsonValue  = String of string | Int of int | Float of float | List of jsonValue list
-  type mapping = Pair of string * jsonValue | Node of string * mapping list
-  type json = Json of mapping list
+  type json =
+      Assoc of (string * json) list
+    | String of string
+    | Int of int
+    | Float of float
+    | Null
+    | List of json list
+
+  let sample =
+    Assoc [("hoge",Assoc[("huga",Int 123);("tekitou",String "aaaa")])]
 end

@@ -7,9 +7,10 @@ module Lexer = struct
       if i < 0 then l else exp (i - 1) (s.[i] :: l) in
     exp (String.length s - 1) []
 
-  let sam = explode "{\"hoge\": {\"hugs\": 21,\"haha\": 456},\"taro\":122,\"jiro\": {\"ichiro\" : 44}}"
+  let sam = explode  "{\"hoge\": {\"hugs\": 21,\"haha\": 456},\"taro\":122,\"jiro\": {\"ichiro\" : 44}}"
 
   let sample_list = ['{';'\"';'m';'\"';':';'\"';'1';'\"';',';'\"';'h';'\"';':';'{';'\"';'t';'\"';':';'6';'}';'}']
+
 
   let is_num n = List.mem n ['0';'1';'2';'3';'4';'5';'6';'7';'8';'9']
 
@@ -57,5 +58,6 @@ module Lexer = struct
       | tok,rest -> sub rest (tok :: result)
     in List.rev (sub lst [])
 
+  let sample = char_to_tokens sam
 
 end
