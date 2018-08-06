@@ -1,10 +1,6 @@
 
 module Parser = struct
 
-  let parse_array lst = match lst with
-      _ :: rest -> [],rest
-    | _ -> [],[]
-
   let parse_list lst =
     let rec sub ls result = match ls with
         Lexer.STRING(s) :: Lexer.COLON :: rest -> let (r,res) = sub rest []
@@ -29,7 +25,6 @@ module Parser = struct
       | _ -> [],Ast.Assoc result
     in sub lst []
 
-  let rec parse_tokens lst = match lst with
-      lst-> let (res,json) = parse_list lst in json
+  let rec parse_tokens lst = let (res,json) = parse_list lst in json
 
 end

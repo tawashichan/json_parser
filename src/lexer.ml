@@ -2,15 +2,14 @@ module Lexer = struct
 
   type token = LBRACE | RBRACE | STRING of string | LBRACKET | RBRACKET | INT of int | FLOAT of float | QUOTE | SQUOTE | EOF | COLON | COMMA
 
+  exception Invalid_char
+
   let explode s =
     let rec exp i l =
       if i < 0 then l else exp (i - 1) (s.[i] :: l) in
     exp (String.length s - 1) []
 
-  let sam = explode "{\"hoge\": {\"hugs\": [[21.5],[32.6]],\"haha\": [{\"aaa\":45},{\"BBB\":78}]},\"taro\":[122.6,44.6],\"jiro\": {\"ichiro\" : 44}}"
-
-  let sample_list = ['{';'\"';'m';'\"';':';'\"';'1';'\"';',';'\"';'h';'\"';':';'{';'\"';'t';'\"';':';'6';'}';'}']
-
+  let sam = explode "{\"hoge\": {\"hugs\": [[[21.5]],[32.6]],\"haha\": [{\"aaa\":45},{\"BBB\":78}]},\"taro\":[122.6,44.6],\"jiro\": {\"ichiro\" : 44}}"
 
   let is_num n = List.mem n ['0';'1';'2';'3';'4';'5';'6';'7';'8';'9']
 
