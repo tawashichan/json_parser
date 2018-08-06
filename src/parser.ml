@@ -30,7 +30,6 @@ module Parser = struct
     in sub lst []
 
   let rec parse_tokens lst = match lst with
-      Lexer.LBRACE :: rest -> let (res,json) = parse_list rest in json
-    | _ -> Ast.Assoc [("foo",Ast.Null)]
+      lst-> let (res,json) = parse_list lst in json
 
 end
