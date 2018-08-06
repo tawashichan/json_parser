@@ -7,7 +7,7 @@ module Lexer = struct
       if i < 0 then l else exp (i - 1) (s.[i] :: l) in
     exp (String.length s - 1) []
 
-  let sam = explode  "{\"hoge\": {\"hugs\": 21,\"haha\": 456},\"taro\":122,\"jiro\": {\"ichiro\" : 44}}"
+  let sam = explode "{\"hoge\": {\"hugs\": [[21.5],[32.6]],\"haha\": [{\"aaa\":45},{\"BBB\":78}]},\"taro\":[122.6,44.6],\"jiro\": {\"ichiro\" : 44}}"
 
   let sample_list = ['{';'\"';'m';'\"';':';'\"';'1';'\"';',';'\"';'h';'\"';':';'{';'\"';'t';'\"';':';'6';'}';'}']
 
@@ -23,12 +23,15 @@ module Lexer = struct
           '\"' :: rest -> get_str_sub rest ""
         | _ -> None,lst)
 
-  let get_num lst =
-    let rec sub ls result = match ls with
-        [] -> Some (int_of_string result),[]
+  let get_num_str lst =
+    let rec sub ls result is_float = match ls with
+        [] -> Some (result),[],is_float
       | c :: rest ->
-        if is_num c then sub rest (result ^ Char.escaped c) else Some(int_of_string result),ls
-    in sub lst ""
+        if is_num c then sub rest (result ^ Char.escaped c) is_float
+        else if c = '.' then
+          sub rest (result ^ Char.escaped c) true
+        else  Some(result),ls,is_float
+    in sub lst "" false
 
   let rec next_token lst =
     match lst with
@@ -42,9 +45,9 @@ module Lexer = struct
     | ',' :: rest -> COMMA,rest
     | _ as c :: rest -> (
         if is_num c then
-          (match get_num lst with
-             Some(n),rest -> INT(n),rest
-           | None,rest -> EOF,rest)
+          (match get_num_str lst with
+             Some(n),rest,is_f -> if is_f then FLOAT(float_of_string n),rest else INT(int_of_string n),rest
+           | None,rest,is_f -> EOF,rest)
         else
           (match get_str lst with
             None,rest -> EOF,rest
@@ -52,12 +55,12 @@ module Lexer = struct
           )
     )
 
-  let char_to_tokens lst =
+  let chars_to_tokens lst =
     let rec sub ls result = match next_token ls with
         EOF,_ -> result
       | tok,rest -> sub rest (tok :: result)
     in List.rev (sub lst [])
 
-  let sample = char_to_tokens sam
+  let sample = chars_to_tokens sam
 
 end

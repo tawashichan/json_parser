@@ -1,4 +1,5 @@
 module Ast = struct
+
   type json =
       Assoc of (string * json) list
     | String of string
@@ -8,5 +9,5 @@ module Ast = struct
     | List of json list
 
   let sample =
-    Assoc [("hoge",Assoc[("huga",Int 123);("tekitou",String "aaaa")])]
+    Assoc [("hoge",List [Assoc[("huga",Int 123);("tekitou",String "aaaa")];Null;Int(22)])]
 end
