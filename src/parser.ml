@@ -1,8 +1,5 @@
 
 module Parser = struct
-  let is_json lst =
-    match lst with
-      _ -> true
 
   let parse_list lst =
     let rec sub ls result = match ls with
